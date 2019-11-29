@@ -1,7 +1,17 @@
-# Announcements
+# IOTStack
+
+IOTstack is a builder for docker-compose to easily make and maintain IoT stacks on the Raspberry Pi
+
+## Announcements
 
 The bulk of the README has moved to the Wiki. Please check it out [here](https://github.com/gcgarner/IOTstack/wiki)
 
+* 2019-11-28 PR @stfnhmplr added diyHue
+* 2019-11-28 Fixed update notification on menu
+* 2019-11-28 Fixed mosquitto logs and database not mapping correctly to volumes. Pull new template to fix
+* 2019-11-28 added the option to disable swapfile by setting swappiness to 0
+* 2019-11-28 PR @stfnhmplr fixed incorrect shegang on MariaDB terminal.sh
+* 2019-11-28 Added native install for RPIEasy
 * 2019-11-27 Additions: NextCloud, MariaDB, MotionEye, Mozilla Webthings, blynk-server (fixed issue with selection.txt)
 * 2019-11-22 BUGFIX selection.txt failed on fresh install, added pushd IOTstack to menu to ensure correct path
 * 2019-11-22 Added notification into menu if project update is available
@@ -16,7 +26,6 @@ The bulk of the README has moved to the Wiki. Please check it out [here](https:/
 * Added update project through the menu
 * Added bash aliases for easier docker stop and start commands
 
-
 ***
 
 ## Highlighted topics
@@ -27,21 +36,18 @@ The bulk of the README has moved to the Wiki. Please check it out [here](https:/
 
  ***
 
-# Coming soon
+## Coming soon
 
+* reverse proxy is now next on the list, I cant keep up with the ports
 * Detection of arhcitecture for seperate stack options for amd64, armhf, i386
 * autocleanup of backups on cloud
-* motioneye
-* reverse proxy
-* python contaienr
-* webthings gateway
-* Gitea
-* NextCloud
+* python container
+* Gitea (in testing branch)
 * OwnCloud
 
 ***
 
-# IOTstack
+## About
 
 Docker stack for getting started on IoT on the Raspberry Pi.
 
@@ -63,6 +69,9 @@ This Docker stack consists of:
 * Telegraf (wiki coming soon)
 * RTL_433
 * EspruinoHub (testing)
+* MotionEye
+* MariaDB
+* Plex
 
 In addition, there is a write-up and some scripts to get a dynamic DNS via duckdns and VPN up and running.
 
@@ -78,11 +87,11 @@ The container will fail if you try to run the docker and native vesions as the s
 
 For those looking for a script that installs native applications check out [Peter Scargill's script](https://tech.scargill.net/the-script/)
   
-# Tested platform
+## Tested platform
 
 Raspberry Pi 3B and 4B Raspbian (Buster)
 
-## Older Pi's
+### Older Pi's
 
 Docker will not run on a PiZero or A model 1 because of the CPU. It has not been tested on a Model 2. You can still use Peter Scargill's [script](https://tech.scargill.net/the-script/)
 
@@ -90,17 +99,21 @@ Docker will not run on a PiZero or A model 1 because of the CPU. It has not been
 
 For those wanting to test out the script in a Virtual Machine before installing on their Pi there are some limitations. The script is designed to work with Debian based distributions. Not all the container have x86_64 images. For example Portainer does not and will give an error when you try and start the stack. Please see the pinned issue [#29](https://github.com/gcgarner/IOTstack/issues/29), there is more info there.
 
-# Feature Requests
+## Feature Requests
 
 Please direct all feature requests to [Discord](https://discord.gg/W45tD83)
   
-# Youtube reference
+## Youtube reference
 
 This repo was originally inspired by Andreas Spiess's video on using some of these tools. Some containers have been added to extend its functionality.
 
-[YouTube video](https://www.youtube.com/watch?v=JdV4x925au0): This is an alternative approach to the setup. Be sure to watch the video for the instructions. Just note that the network addresses are different, see note below
+[YouTube video](https://www.youtube.com/watch?v=JdV4x925au0): This is an alternative approach to the setup. Be sure to watch the video for the instructions. Just note that the network addresses are different, see the wiki under Docker Networks.
 
-# Download the project
+### YouTube guide
+
+@peyanski (Kiril) made a YouTube video on getting started using the project, check it out [here](https://youtu.be/5JMNHuHv134)
+
+## Download the project
 
 1.On the lite image you will need to install git first
 
@@ -122,30 +135,30 @@ Due to some script restraints, this project needs to be stored in ~/IOTstack
 cd ~/IOTstack
 ```
 
-# The Menu
+## The Menu
 
 I've added a menu to make things easier. It is good to familiarise yourself with the installation process.
 The menu can be used to install docker and build the docker-compose.yml file necessary for starting the stack. It also runs a few common commands. I do recommend you start to learn the docker and docker-compose commands if you plan on using docker in the long run. I've added several helper scripts, have a look inside.
 
 Navigate to the project folder and run `./menu.sh`
 
-## Installing from the menu
+### Installing from the menu
 
 Select the first option and follow the prompts
 
-## Build the docker-compose file
+### Build the docker-compose file
 
 docker-compose uses the `docker-compose.yml` file to configure all the services. Run through the menu to select the options you want to install.
 
-## Docker commands
+### Docker commands
 
 This menu executes shell scripts in the root of the project. It is not necessary to run them from the menu. Open up the shell script files to see what is inside and what they do.
 
-## Miscellaneous commands
+### Miscellaneous commands
 
 Some helpful commands have been added like disabling swap.
 
-# Running Docker commands
+## Running Docker commands
 
 From this point on make sure you are executing the commands from inside the project folder. Docker-compose commands need to be run from the folder where the docker-compose.yml is located. If you want to move the folder make sure you move the whole project folder.
 
@@ -167,14 +180,18 @@ The `docker-compose down` command stops the containers then deletes them.
 
 Docker allows you to map folders inside your containers to folders on the disk. This is done with the "volume" key. There are two types of volumes. Modification to the container are reflected in the volume.
 
-# See Wiki for further info
+## See Wiki for further info
 
 [Wiki](https://github.com/gcgarner/IOTstack/wiki)
 
-# Add to the project
+## Add to the project
 
 Feel free to add your comments on features or images that you think should be added.
 
-# Contributions
+## Contributions
 
-@mrmx, @oscrx, @brianimmel, @Slyke, @AugustasV, @Paulf007, @affankingkhan, @877dev, @Paraphraser
+If you use some of the tools in the project please consider donating or contributing on their projects. It doesn't have to be monetary, reporting bugs and PRs help improve the projects for everyone.
+
+### Thanks
+
+@mrmx, @oscrx, @brianimmel, @Slyke, @AugustasV, @Paulf007, @affankingkhan, @877dev, @Paraphraser, @stfnhmplr, @peyanski
