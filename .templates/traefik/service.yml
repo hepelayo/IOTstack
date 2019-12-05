@@ -12,7 +12,7 @@
       - traefik.frontend.rule=Host:traefik.${DOMAIN_NAME}
       - traefik.port=8080
       - traefik.enable=true
-      - traefik.frontend.auth.basic.users=${TRAEFIK_HTTP_USERNAME}:${TRAEFIK_HTTP_PASSWORD}
+      - traefik.frontend.auth.basic.users=${TRAEFIK_HTTP_USERPASS}
     command:
       - "--acme.domains=${DOMAIN_NAME},*.${DOMAIN_NAME}"
     volumes:

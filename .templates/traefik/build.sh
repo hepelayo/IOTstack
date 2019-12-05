@@ -9,26 +9,27 @@ function configTraefik(){
 
     # Setup the traefik.env file
     clear
-    echo -e "Let's start configuring your DuckDNS account"
-    read -p "  Enter your DuckDNS Token: " duckToken
-    read -p "  Enter your DuckDNS subdomian : " duckSubdomain
-    echo
-    echo -e "Next we will configure the access to the Traefik Dashboard"
-    read -p "  Enter the desired username to access to the dashboard: " traefikUsername
+    whiptail --title "Traefik Let's Encrypt" --msgbox "Let's start configuring your DuckDNS account" 10 60 3>&1 1>&2 2>&3
+    duckToken=$(whiptail --title "DuckDNS account" --inputbox "Please enter your DuckDNS Token:" 10 60 3>&1 1>&2 2>&3)
+    duckSubdomain=$(whiptail --title " DuckDNS account" --inputbox "Please enter your DuckDNS Subdomain:" 10 60 3>&1 1>&2 2>&3)
+    whiptail --title "Traefik Dashboard Access" --msgbox "Next we will configure the access to the Traefik Dashboard" 10 60 3>&1 1>&2 2>&3
+    traefikUsername=$(whiptail --title "Traefik Dashboard account" --inputbox "Please enter the desired username to access to the dashboard:" 10 60 3>&1 1>&2 2>&3)
+
 
     if [ ! -z "$traefikUsername" ];then
-        traefikPassword=$(htpasswd -n $traefikUsername | cut -d ':' -f2)
-        if [ ! -z "$traefikPassword" ]; then
-            if [[ $(grep -cs "TRAEFIK_HTTP_USERNAME=" .env) -gt 0 ]]; then
-                sed --in-place -re "s/^(TRAEFIK_HTTP_USERNAME=).*/\1$traefikUsername/" .env
+        while [[ "$passphrase" != "$passphrase_repeat" || ${#passphrase} -lt 8 ]]; do
+    		passphrase=$(whiptail --title "Traefik Dashboard account" --passwordbox "${passphrase_invalid_message}Please enter the passphrase (8 chars min.):" 10 60 3>&1 1>&2 2>&3)
+	    	passphrase_repeat=$(whiptail --title "Traefik Dashboard account" --passwordbox "Please repeat the passphrase:" 10 60 3>&1 1>&2 2>&3)
+		    passphrase_invalid_message="Passphrase too short, or not matching! "
+	    done
+	    traefikUserPass=$(echo $passphrase | htpasswd -ni $traefikUsername)
+
+        if [ ! -z "$traefikUserPass" ]; then
+            if [[ $(grep -cs "TRAEFIK_HTTP_USERPASS=" .env) -gt 0 ]]; then
+                sed --in-place -re "s/^(TRAEFIK_HTTP_USERPASS=).*/\1$traefikUserPass/" .env
             else
-                echo "TRAEFIK_HTTP_USERNAME=$traefikUsername" >> .env
+                echo "TRAEFIK_HTTP_USERPASS=$traefikUserPass" >> .env
             fi
-            if [[ $(grep -q "TRAEFIK_HTTP_PASSWORD=" .env) -gt 0 ]]; then
-                sed --in-place -re "s/^(TRAEFIK_HTTP_PASSWORD=).*/\1$traefikPassword/" .env
-            else
-                echo "TRAEFIK_HTTP_PASSWORD=$traefikPassword" >> .env
-            fi            
             sed --in-place -re "s/^#(      - traefik.frontend.auth.basic.users\.*)/\1/" ./docker-compose.yml
         else
             sed --in-place -re "s/^(      - traefik.frontend.auth.basic.users\.*)/#\1/" ./docker-compose.yml
