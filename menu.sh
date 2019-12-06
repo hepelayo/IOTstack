@@ -333,7 +333,6 @@ case $mainmenu_selection in
 			"swap" "Disable swap by uninstalling swapfile" \
 			"swappiness" "Disable swap by setting swappiness to 0" \
 			"log2ram" "install log2ram to decrease load on sd card, moves /var/log into ram" \
-			# "duckdns" "install cronjob for duckdns update" \
 			3>&1 1>&2 2>&3
 	)
 
