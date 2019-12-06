@@ -22,8 +22,8 @@ function configTraefik(){
 	    	passphrase_repeat=$(whiptail --title "Traefik Dashboard account" --passwordbox "Please repeat the passphrase:" 10 60 3>&1 1>&2 2>&3)
 		    passphrase_invalid_message="Passphrase too short, or not matching! "
 	    done
-	    traefikUserPass=$(echo $passphrase | htpasswd -ni $traefikUsername)
-
+	    #traefikUserPass=$(echo $passphrase | htpasswd -ni $traefikUsername)
+        traefikUserPass=$traefikUsername:`echo $passphrase | openssl passwd -apr1 -stdin`
         if [ ! -z "$traefikUserPass" ]; then
             if [[ $(grep -cs "TRAEFIK_HTTP_USERPASS=" .env) -gt 0 ]]; then
                 sed --in-place -re "s/^(TRAEFIK_HTTP_USERPASS=).*/\1$traefikUserPass/" .env
