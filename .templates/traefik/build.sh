@@ -4,8 +4,9 @@
 
 function configTraefik(){
     # Create the file where the certs will be saved if not exists
-    [ -f ./services/traefik/acme.json ] && rm ./services/traefik/acme.json
-    touch ./services/traefik/acme.json && chmod 600 ./services/traefik/acme.json
+    [ -d ./certs ] && mkdir ./certs
+    [ -f ./certs/acme.json ] && rm ./certs/acme.json
+    touch ./certs/acme.json && chmod 600 ./certs/acme.json
 
     # Setup the traefik.env file
     clear
@@ -45,7 +46,8 @@ function configTraefik(){
         
         # Setup crontab to update the Raspberry Pi IP in DuckDNS
         sed --in-place -re "s/^(DOMAINS=).*/\1$duckSubdomain/; s/^(DUCKDNS_TOKEN=).*/\1$duckToken/" ./duck/duck.sh
-        echo "*/5 * * * root ${PWD}/duck/duck.sh" | sudo tee /etc/cron.d/duckdns_cron &>/dev/null
+        echo "*/5 * * * * root /home/pi/IOTstack/duck/duck.sh" | sudo tee /etc/cron.d/duckdns_cron &>/dev/null
+        echo -e "\e[93m""Added DuckDNS IP updater to Crontab (/etc/cron.d/duckdns_cron)""\e[0m"
 
         # Set .env file in docker-compose directory in order to easy the traefik's labels config
         if [[ $(grep -cs "DOMAIN_NAME=" .env) -gt 0 ]]; then
@@ -66,3 +68,11 @@ else
 		configTraefik
 	fi
 fi
+
+# Dump Traefik certificates to key, crt and pem files
+if [ "$(stat -c %s ".certs/json")" -gt 0 ]; then
+        .certs/traefik-certs-dumper.sh
+fi
+
+# Add crontab to update the dumped certificates if Traefik certicate has changed
+echo "0 0 * * * root /home/pi/IOTstack/certsDumper/traefik-certs-dumper.sh >/dev/null 2>&1" | sudo tee /etc/cron.d/traefik-certs-dumper_cron &>/dev/null
