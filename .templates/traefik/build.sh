@@ -70,8 +70,8 @@ else
 fi
 
 # Dump Traefik certificates to key, crt and pem files
-if [ "$(stat -c %s ".certs/json")" -gt 0 ]; then
-        .certs/traefik-certs-dumper.sh
+if [ "$(stat -c %s "./certs/acme.json")" -gt 0 ]; then
+        .certsDumper/traefik-certs-dumper.sh
 fi
 
 # Add crontab to update the dumped certificates if Traefik certicate has changed
