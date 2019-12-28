@@ -1,0 +1,9 @@
+homeassistant:
+  container_name: home-assistant
+  image: homeassistant/home-assistant:stable
+  volumes:
+    - ./volumes/home_assistant/config:/config
+  env_file:
+    - ./services/home_assistant/home_assistant.env
+  restart: always
+  network_mode: host

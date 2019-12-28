@@ -27,11 +27,12 @@ declare -A cont_array=(
 	[nginx]="NGINX by linuxserver"
 	[diyhue]="diyHue"
 	[traefik]="Traefik v1.7.16 (Proxy server with Let's Encrypt using DuckDNS"
+	[home_assistant]="Home Assistant"
 
 )
 declare -a armhf_keys=("portainer" "nodered" "influxdb" "grafana" "mosquitto" "telegraf" "mariadb" "postgres"
 	"adminer" "openhab" "zigbee2mqtt" "pihole" "plex" "tasmoadmin" "rtl_433" "espruinohub"
-	"motioneye" "webthings_gateway" "blynk_server" "nextcloud" "diyhue" "traefik")
+	"motioneye" "webthings_gateway" "blynk_server" "nextcloud" "diyhue" "traefik" "home_assistant")
 
 sys_arch=$(uname -m)
 
