@@ -18,7 +18,7 @@ MQTT_DOCKER_CONTAINER="mosquitto"
 MQTT_HOSTNAME="olimpohome.duckdns.org"
 
 # The location of where to save the certificates
-MQTT_CERT_DIR="/home/pi/IOTstack/certs/certs"
+MQTT_CERT_DIR="/home/pi/IOTstack/certs"
 
 # Ensure the certificates eventually have this file ownership
 MQTT_CERT_OWNERSHIP="pi:pi"
