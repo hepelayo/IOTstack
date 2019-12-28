@@ -11,6 +11,15 @@ Update() {
   sudo apt-get upgrade -y
 }
 
+Disable_ipv6() {
+  if [[ $(grep -cs "net.ipv6.conf.all.disable_ipv6 = 1" /etc/sysctl.conf) -eq 0 ]]; then
+    echo "net.ipv6.conf.all.disable_ipv6 = 1" | sudo tee /etc/sysctl.conf &>/dev/null
+    sudo sysctl -p
+    else
+    echo "IPv6 is already disabled"
+  fi
+}
+
 InstallSamba() {
   if [ -f /etc/samba/smb.conf ]
     then
@@ -91,12 +100,13 @@ InstallDocker() {
 mainmenu_selection=$(whiptail --title "Main Menu" --menu --notags \
 	"" 20 78 12 -- \
   "all" "Install all" \
+  "disableipv6" "Disable IPv6" \
   "update" "Update Raspberry Pi" \
   "samba" "Install Samba" \
-  "duckdns" "Install Dinamic DNS updater (for DuckDNS)" \
-	"docker" "Install Docker" \
   3>&1 1>&2 2>&3)
-	#"build" "Build Stack" \
+  #"duckdns" "Install Dinamic DNS updater (for DuckDNS)" \
+	#"docker" "Install Docker" \
+  #"build" "Build Stack" \
 	#"hassio" "Install Hass.io (Requires Docker)" \
 	#"commands" "Docker commands" \
 	#"backup" "Backup options" \
@@ -104,11 +114,15 @@ mainmenu_selection=$(whiptail --title "Main Menu" --menu --notags \
 	
 
 case $mainmenu_selection in
-  "all") 
+  "all")
+    Disable_ipv6 
     Update
     InstallSamba
     #InstallDuckDNSCronTab
     #InstallDocker
+    ;;
+  "disableipv6")
+    Disable_ipv6
     ;;
   "update")
     Update
