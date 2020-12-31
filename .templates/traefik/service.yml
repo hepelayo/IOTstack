@@ -1,0 +1,21 @@
+  traefik:
+    image: traefik:v1.7.16
+    restart: unless-stopped
+    container_name: traefik
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    env_file:
+      - ./services/traefik/traefik.env
+    labels:
+      - traefik.frontend.rule=Host:traefik.${DOMAIN_NAME}
+      - traefik.port=8080
+      - traefik.enable=true
+      - traefik.frontend.auth.basic.users=${TRAEFIK_HTTP_USERPASS}
+    command:
+      - "--acme.domains=${DOMAIN_NAME},*.${DOMAIN_NAME}"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./services/traefik/traefik.conf:/etc/traefik/traefik.toml
+      - ./certs/acme.json:/acme.json
